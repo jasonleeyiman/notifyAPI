@@ -152,33 +152,14 @@ router.post('/insert/multiple/sms', async function(req,res){
     res.status(400).json({message: err.message});
   }
 });
-// 用於做SMS訊息插入的API，在軟件處於運行狀態的時候或者休眠狀態的時候更新SMS訊息列表
-// 用於做SMS訊息提取的API
-router.get('/retrieve/sms',async function(req,res){
+// 用於做SMS訊息插入的API，在軟件處於運行狀態的時候或者休眠狀態的時候插入新收到的SMS
+router.post('/insert/one/sms', async function(req,res){
   const db=await connectToDB();
   try{
-    let result=await db.collection("SMS").find({ status:0 }).toArray();
-    if(result.length>0){
-      res.status(200).json(result);
-    }else{
-      res.status(404).json({message: "SMS not found"});
-    }
+    let result=await db.collection('SMS').insertOne(req.body);
+    res.status(201).json({id: result.insertedId});
   }catch(err){
     res.status(400).json({message: err.message});
-  }finally{
-    await db.client.close();
   }
 });
-router.get('/split/:sentence', async function(req,res){
-  try{
-    const sentence = decodeURIComponent(req.params.sentence);
-    const words=nodejieba.cut(sentence);
-    console.log(sentence);
-    console.log(words);
-    res.status(200).json(words);
-  }catch(e){
-    console.log(e);
-    res.status(400).json({nessage: "Unable to split"});
-  }
-})
 module.exports = router;

@@ -152,14 +152,4 @@ router.post('/insert/multiple/sms', async function(req,res){
     res.status(400).json({message: err.message});
   }
 });
-// 用於做SMS訊息插入的API，在軟件處於運行狀態的時候或者休眠狀態的時候插入新收到的SMS
-router.post('/insert/one/sms', async function(req,res){
-  const db=await connectToDB();
-  try{
-    let result=await db.collection('SMS').insertOne(req.body);
-    res.status(201).json({id: result.insertedId});
-  }catch(err){
-    res.status(400).json({message: err.message});
-  }
-});
 module.exports = router;

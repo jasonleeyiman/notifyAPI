@@ -152,14 +152,4 @@ router.post('/insert/multiple/sms', async function(req,res){
     res.status(400).json({message: err.message});
   }
 });
-// 在手機處於前後臺運行的過程之中收到一條SMS並將其插入MongoDB
-router.post('/insert/one/sms', async function(req,res){
-  const db=await connectToDB();
-  try{
-    let result=await db.collection('SMS').insertOne(req.body);
-    res.status(201).json({id: result.insertedId});
-  }catch(err){
-    res.status(400).json({message: err.message});
-  }
-});
 module.exports = router;

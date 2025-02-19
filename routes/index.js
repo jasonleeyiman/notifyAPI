@@ -133,7 +133,7 @@ router.delete('/delete/keywords/:id',async function(req,res){
     await db.client.close();
   }
 });
-// 用於做SMS訊息插入的API，是在軟件第一次被打開的時候或者是關閉之後再次被打開的時候插入SMS訊息
+// 用於做SMS訊息插入的API，是在軟件第一次被打開的時候或者是卸載之後再次下載的時候插入SMS訊息
 router.post('/insert/multiple/sms', async function(req,res){
   const db=await connectToDB();
   try{
@@ -148,6 +148,16 @@ router.post('/insert/multiple/sms', async function(req,res){
     }else{
       res.status(200).json({message: "Successful but no message"});
     }
+  }catch(err){
+    res.status(400).json({message: err.message});
+  }
+});
+// 在手機處於前後臺運行的過程之中收到一條SMS並將其插入MongoDB
+router.post('/insert/one/sms', async function(req,res){
+  const db=await connectToDB();
+  try{
+    let result=await db.collection('SMS').insertOne(req.body);
+    res.status(201).json({id: result.insertedId});
   }catch(err){
     res.status(400).json({message: err.message});
   }

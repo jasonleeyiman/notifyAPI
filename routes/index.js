@@ -1,11 +1,6 @@
 var express = require('express');
 var router = express.Router();
 const { connectToDB, ObjectId } = require('../utils/db');
-const nodejieba=require("nodejieba");
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
 router.post('/information', async function(req,res){
   const db=await connectToDB();
   try{

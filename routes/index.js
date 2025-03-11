@@ -147,4 +147,28 @@ router.post('/insert/multiple/sms', async function(req,res){
     res.status(400).json({message: err.message});
   }
 });
+router.put('/sms/transfer', async function(req,res){
+  const db=await connectToDB();
+  try{
+    const smsList=req.body;
+    if(smsList.length>0){
+      for(var sms of smsList){
+        if(sms.selected){
+          await db.collection('SMS').updateOne({_id: new ObjectId(String(sms._id))},{$set: {
+            status: 1
+          }});
+        }else{
+          await db.collection('SMS').updateOne({_id: new ObjectId(String(sms._id))},{$set: {
+            status: 2
+          }});
+        }
+      }
+      res.status(201).json({message: "SMS updated successful"});
+    }else{
+      res.status(200).json({message: "No SMS updated"});
+    }
+  }catch(err){
+    res.status(400).json({message: err.message});
+  }
+});
 module.exports = router;

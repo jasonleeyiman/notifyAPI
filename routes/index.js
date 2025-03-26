@@ -60,7 +60,7 @@ router.delete('/task/delete/:id',async function(req,res){
 router.get('/task/search/:keyword',async function(req,res){
   const db=await connectToDB();
   try{
-    let result=await db.collection("Tasks").find({task:{$regex:req.params.keyword,$options: 'i'}}).toArray();
+    let result=await db.collection("Tasks").find({company:{$regex:req.params.keyword,$options: 'i'}}).toArray();
     if(result.length==0){
       res.status(404).json({message:"No task found"});
     }else{
